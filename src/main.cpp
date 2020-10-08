@@ -7,6 +7,7 @@ int main(){
     scanf("%d %d",&N,&M);
 
     Matrix m(N,M);
+    
     for(int a = 0; a < N; a++){
         for(int b = 0; b < M; b++){
             printf("ingrese M[%d][%d]:",a,b);
@@ -14,9 +15,9 @@ int main(){
         }
     }
 
-    m.print();
+    std::cout << m << std::endl;
     m.swapRows(0,2);
-    m.print();
+    std::cout << m << std::endl;
 
     return 0;
 }

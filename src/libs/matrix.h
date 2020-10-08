@@ -1,16 +1,19 @@
 #ifndef MATRIX_H_
 #define MATRIX_H_
 
-#include<cstddef>
-#include<cstdio>
+#include<iostream>
 
 class Matrix{
     public:
         Matrix(int, int);
-        double * operator [](int);
         ~Matrix();
 
-        void print();
+        double * operator [](int);
+        friend std::ostream& operator<<(std::ostream&, Matrix const&);
+
+        int getRows();
+        int getColumns();
+
         void swapRows(int, int);
 
     private:
