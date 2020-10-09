@@ -59,7 +59,7 @@ Rational Rational::operator /(Rational const& r) const{Rational res = *this; res
 Rational& Rational::operator =(Rational const& r){denominator = r.denominator; numerator = r.numerator; return *this;}
 Rational& Rational::operator +=(Rational const& r){
     int mcm = minimumCommonMultiple(r.denominator,denominator);
-    numerator = (numerator * mcm/denominator) + (r.numerator * mcm/r.denominator);
+    numerator = (numerator * (mcm/denominator)) + (r.numerator * (mcm/r.denominator));
     denominator = mcm;
     *this = Rational::reduce(*this);
     return *this;

@@ -2,13 +2,14 @@
 #define MATRIX_H_
 
 #include<iostream>
+#include "rational.h"
 
 class Matrix{
     public:
         Matrix(int, int);
         ~Matrix();
 
-        double * operator [](int);
+        Rational * operator [](int);
         friend std::ostream& operator<<(std::ostream&, Matrix const&);
 
         int getRows();
@@ -17,7 +18,7 @@ class Matrix{
         void swapRows(int, int);
 
     private:
-        double **matrix = NULL;
+        Rational **matrix = NULL;
         int rows, columns;
 };
 #endif
