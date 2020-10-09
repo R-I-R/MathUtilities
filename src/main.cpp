@@ -2,6 +2,8 @@
 #include "libs/matrix.h"
 #include "libs/rational.h"
 
+double abs(double x) {return (x < 0 ? -x: x);}
+
 int main(){
     /*int N,M;
     printf("Ingrese la cantidad de filas y columnas (filas columnas): ");
@@ -20,14 +22,9 @@ int main(){
     m.swapRows(0,2);
     std::cout << m << std::endl;*/
 
-    Rational r1, r2(5), r3(3,4);
-    std::cout << r1 <<" "<< r2 <<" "<< r3 << '\n';
-    r1 += 3;
-    r2 /= r3;
-    std::cout << r1 <<" "<< r2 <<" "<< r3 << '\n';
-    r3 *= 2;
-    r2 -= Rational(2,3);
-    std::cout << r1 <<" "<< r2 <<" "<< r3 << '\n';
+    Rational x(0.0), y(1.0), z(-1.0);
+
+    std::cout << x << " " << y << " " << z << std::endl;
 
     return 0;
 }

@@ -42,6 +42,7 @@ class Rational{
 
         static Rational reduce(Rational const&);
         static Rational inverse(Rational const&);
+        static Rational abs(Rational const&);
 
     private:
         int numerator;
