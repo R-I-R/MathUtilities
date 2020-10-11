@@ -43,6 +43,8 @@ class Rational{
         static Rational reduce(Rational const&);
         static Rational inverse(Rational const&);
         static Rational abs(Rational const&);
+        static Rational MCD(Rational const&, Rational const&);
+        static Rational MCM(Rational const&, Rational const&);
 
     private:
         int numerator;

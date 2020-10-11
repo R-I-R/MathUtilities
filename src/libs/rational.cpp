@@ -99,5 +99,11 @@ Rational Rational::reduce(Rational const& r){
 }
 
 Rational Rational::inverse(Rational const& r){return Rational(r.denominator, r.numerator);}
-
 Rational Rational::abs(Rational const& r){return (r < 0 ? -r: r);}
+
+Rational Rational::MCD(Rational const& a, Rational const& b){
+    return Rational(maximumCommonDivisor(a.numerator,b.numerator),maximumCommonDivisor(a.denominator,b.denominator));
+}
+Rational Rational::MCM(Rational const& a, Rational const& b){
+    return Rational(minimumCommonMultiple(a.numerator,b.numerator), minimumCommonMultiple(a.denominator, b.denominator));
+}

@@ -21,8 +21,12 @@ int main(){
     }
 
     std::cout << m << std::endl;
+
+    std::cout << Rational::MCD(m[0][0],m[0][1]) << std::endl;
+    std::cout << Rational::MCM(m[1][0],m[1][1]) << std::endl;
     m.swapRows(0,2);
     std::cout << m << std::endl;
+
 
     return 0;
 }
