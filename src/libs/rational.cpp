@@ -2,15 +2,15 @@
 
 int maximumCommonDivisor(int a, int b){
     if(b == 0) return a;
-    return maximumCommonDivisor(b, a%b);
+    return abs(maximumCommonDivisor(b, a%b));
 }
 int minimumCommonMultiple(int a, int b){
-    return (a*b)/maximumCommonDivisor(a,b);
+    return abs((a*b)/maximumCommonDivisor(a,b));
 }
 
 
 Rational::Rational(): numerator(0), denominator(1){}
-Rational::Rational(int numerator, int denominator): numerator((numerator < 0 ? -1:1)*numerator), denominator((denominator < 0 ? -1:1)*denominator){}
+Rational::Rational(int numerator, int denominator): numerator((denominator < 0 ? -1:1)*numerator), denominator((denominator < 0 ? -1:1)*denominator){}
 Rational::Rational(int number): numerator(number), denominator(1){}
 Rational::Rational(double decimal){ // pasar de decimal a fraccion mediante busqueda binaria
     double precision = 1e-9; //error relativo

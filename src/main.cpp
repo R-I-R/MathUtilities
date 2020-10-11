@@ -6,7 +6,7 @@ double abs(double x) {return (x < 0 ? -x: x);}
 
 int main(){
     int N,M;
-    printf("Ingrese la cantidad de filas y columnas (filas columnas): ");
+    /*printf("Ingrese la cantidad de filas y columnas (filas columnas): ");
     scanf("%d %d",&N,&M);
 
     Matrix m(N,M);
@@ -24,8 +24,8 @@ int main(){
 
     std::cout << Rational::MCD(m[0][0],m[0][1]) << std::endl;
     std::cout << Rational::MCM(m[1][0],m[1][1]) << std::endl;
-    m.swapRows(0,2);
-    std::cout << m << std::endl;
+    m.swapRows(0,2);*/
+    std::cout << Rational(2,3) << std::endl<< Rational(-2,3) << std::endl<< Rational(-2,-3) << std::endl<< Rational(2,-3) << std::endl;
 
 
     return 0;
