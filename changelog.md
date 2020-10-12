@@ -53,14 +53,14 @@
 - swap errors in prototipo_matriz
 
 ## 1.0.0: October 12, 2020
-## Added
+### Added
 - Main program to main.cpp
 - toEchelonForm and toReducedEchelonForm to main
 - Matrix methods gcdRow, multiplyRow and sumRows
 - Rational cin operator
 - .exe to gitignore
 
-## Changed
+### Changed
 - Now numbers with 1 as denominator are printed as integer
 - Matrix elements are printed with 10 characters of width
 - Spaces replaced by tabs
