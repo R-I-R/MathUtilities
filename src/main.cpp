@@ -83,7 +83,7 @@ int main(){
 		}
 	}
 
-	printf("\nYour matrix");
+	printf("\nYour matrix\n");
 	std::cout << m << std::endl;
 	toReducedEchelonForm(m);
 	printf("Matrix in reduced echelon form\n");
