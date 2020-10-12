@@ -125,7 +125,7 @@ int ToEchelonForm(Matrix* p, int dimensions[2])
 {
   int piv_count = 0;
   int i, j, pivot_row;
-  Rational pivot_factor, current_item, gcd;
+  Rational pivot_value, current_item, gcd;
   Rational zero = Rational(0);
 
   for(i=0; i<dimensions[0]; i++){
@@ -155,14 +155,14 @@ int ToEchelonForm(Matrix* p, int dimensions[2])
         std::cout << "\n[NEW PIVOT]     pos:(" << i << ',' << j << ")\n";
         PrintMatrix(p, dimensions);
         std::cout << "---------------------------------------\n\n";
-        pivot_factor = current_item;
+        pivot_value = current_item;
       }
 
-      else if (i > pivot_row){
+      else {
         Rational abs_piv, abs_current, mcm;
-        bool same_sign = (current_item>zero && pivot_factor>zero) || (current_item<zero && pivot_factor<zero);
+        bool same_sign = (current_item>zero && pivot_value>zero) || (current_item<zero && pivot_value<zero);
 
-        abs_piv = Rational::abs(pivot_factor);
+        abs_piv = Rational::abs(pivot_value);
         abs_current = Rational::abs(current_item);
 
         mcm = Rational::MCM(abs_piv, abs_current);
@@ -184,7 +184,7 @@ int ToEchelonForm(Matrix* p, int dimensions[2])
 void ToReducedEchelonForm(Matrix *p, int dimensions[2]){
 
   int i, j, piv_count;
-  Rational pivot_factor, current_item;
+  Rational pivot_value, current_item;
   Rational zero = Rational(0);
   piv_count = ToEchelonForm(p, dimensions);
 
@@ -192,15 +192,15 @@ void ToReducedEchelonForm(Matrix *p, int dimensions[2]){
   for (i=piv_count-1; i>0; i--){
 
     j = 0;
+    pivot_value = zero;
     do{
-      current_item = (*p)[i][j];
-      if (current_item == zero){
+      pivot_value = (*p)[i][j];
+      if (pivot_value == zero){
         j++;
         continue;
       }
 
-      RowDiv(p, i, current_item, dimensions);
-      pivot_factor = Rational(1);
+      RowDiv(p, i, pivot_value, dimensions);
       for (k=0; k<i; k++){
 
         current_item = (*p)[k][j];
@@ -210,7 +210,7 @@ void ToReducedEchelonForm(Matrix *p, int dimensions[2]){
         RowSum(p, k, i, -1 * current_item, dimensions);
       }
       j++;
-    } while(j<dimensions[1] && current_item==zero);
+    } while(j<dimensions[1] && pivot_value==zero);
 
   }
 
