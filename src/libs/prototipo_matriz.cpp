@@ -1,56 +1,52 @@
-#include <iostream>
+#include<iostream>
 
-void CreateMatrix();
+#include "rational.h"
+#include "rational.cpp"
+#include "matrix.h"
+#include "matrix.cpp"
 
-int GCD(int a, int b){
-  if (b == 0)
-    return a;
-  return GCD(b, a%b);
-}
 
-int LCM(int a, int b){
-  return (a / GCD(a,b)) * b;
-}
-
-int GCD_Row(int* p, int row, int dimensions[2]){
-  int result = -1;
-  int j, current_item, absolute_val;
+Rational GCD_Row(Matrix* p, int row, int dimensions[2]){
+  int j;
+  Rational current_item, result, absolute_val;
+  Rational zero = Rational(0);
+  Rational one = Rational(1);
+  result = zero;
 
   for (j=0; j<dimensions[1]; j++){
-    current_item = *(p + row*dimensions[1] + j);
-    if (current_item == 0)
+    current_item = (*p)[row][j];
+    if (current_item == Rational(0))
       continue;
 
-    absolute_val = (current_item > 0) ? current_item : -1 * current_item;
-
-    if (result == -1){
+    absolute_val = Rational::abs(current_item);
+    if (result == zero){
       result = absolute_val;
       continue;
     }
 
-    result = GCD(result, absolute_val);
+    result =  Rational::MCD(result, absolute_val);
 
-    if (result == 1)
-      return 1;
+    if (result == one)
+      return one;
   }
 
   return result;
 }
 
 
-void PrintMatrix(int* p, int dimensions[2])
+void PrintMatrix(Matrix* p, int dimensions[2])
 {
   int count = 0;
-  int i = 0;
-  int j = 0;
+  int i,j;
 
   for (i = 0; i < dimensions[0]; i++){
     std::cout << '|';
+
     for (j = 0; j < dimensions[1]; j++){
       if (j == dimensions[1]-1)
-        std::cout << *(p+count) << "|\n";
+        std::cout << (*p)[i][j] << "|\n";
       else
-        std::cout << *(p+count) << ";    ";
+        std::cout << (*p)[i][j] << ";    ";
       count++;
     }
   }
@@ -58,72 +54,79 @@ void PrintMatrix(int* p, int dimensions[2])
   std::cout << std::endl;
 }
 
-void RowMul(int* p, int row, int k, int dimensions[2])
+
+void RowMul(Matrix* p, int row, Rational k, int dimensions[2])
 {
   int j;
 
   for (j = 0; j < dimensions[1]; j++){
-    *(p + row*dimensions[1] + j) *= k;
+    (*p)[row][j] *= k;
   }
 
   PrintMatrix(p, dimensions);
 }
 
-void RowDiv(int* p, int row, int k, int dimensions[2])
+
+void RowDiv(Matrix* p, int row, Rational k, int dimensions[2])
 {
   int j;
 
   for (j = 0; j < dimensions[1]; j++){
-    *(p + row*dimensions[1] + j) /= k;
+    (*p)[row][j] /= k;
   }
 
   PrintMatrix(p, dimensions);
 }
 
-void RowSum(int* p, int row_to, int row_from, int k, int dimensions[2])
+void RowSum(Matrix* p, int row_to, int row_from, Rational k, int dimensions[2])
 {
   int j;
 
   for (j = 0; j < dimensions[1]; j++){
-    int sum = k * (*(p + row_from*dimensions[1] + j));
-    *(p + row_to*dimensions[1] + j) += sum;
+    Rational sum = k * (*p)[row_from][j];
+    (*p)[row_to][j] += sum;
   }
 
   PrintMatrix(p, dimensions);
 }
 
-void RowInter(int* p, int row_to, int row_from, int dimensions[2])
+void RowInter(Matrix* p, int row_to, int row_from, int dimensions[2])
 {
   int j;
 
   for (j = 0; j < dimensions[1]; j++){
-    int temp = *(p + row_to*dimensions[1] + j);
-    *(p + row_to*dimensions[1] + j) = *(p + row_from*dimensions[1] + j);
-    *(p + row_from*dimensions[1] + j) = temp;
+    Rational temp = (*p)[row_to][j];
+    (*p)[row_to][j] = (*p)[row_from][j];
+    (*p)[row_from][j] = temp;
   }
 
   PrintMatrix(p, dimensions);
 }
 
-void OrderPivot(int* p, int piv_pos[2], int dimensions[2], int piv_count)
+void OrderPivot(Matrix* p, int piv_pos[2], int dimensions[2], int piv_count)
 {
   int row;
+  Rational zero = Rational(0);
 
   if (piv_pos[0] == piv_count)
     return;
 
   for (row = piv_count; row < piv_pos[0]; row++){
-    if ( *(p + row*dimensions[1] + piv_pos[1]) == 0 ){
-      RowInter(p, row, piv_pos[0], dimensions);
+    if ( (*p)[row][piv_pos[1]] == zero ){
+      (*p).swapRows(row, piv_pos[0]);
+      PrintMatrix(p, dimensions);
       return;
     }
   }
 }
 
-void ToEchelonForm(int* p, int dimensions[2])
+
+int ToEchelonForm(Matrix* p, int dimensions[2])
 {
   int piv_count = 0;
-  int i, j, pivot_row, pivot_factor, current_item, gcd;
+  int i, j, pivot_row;
+  Rational pivot_factor, current_item, gcd;
+  Rational zero = Rational(0);
 
   for(i=0; i<dimensions[0]; i++){
     gcd = GCD_Row(p, i, dimensions);
@@ -134,17 +137,17 @@ void ToEchelonForm(int* p, int dimensions[2])
     pivot_row = -1;
 
     for(i = piv_count; i < dimensions[0]; i++){
-      current_item = *(p + i*dimensions[1] + j);
-      if (current_item == 0)
+      current_item = (*p)[i][j];
+      if (current_item == zero)
         continue;
 
 
       if (pivot_row == -1){
-        if(current_item < 0){
-          RowMul(p, i, -1, dimensions);
+        if(current_item < zero){
+          RowMul(p, i, Rational(-1), dimensions);
           current_item *= -1;
         }
-        
+
         int current_pos[2] = {i,j};
         OrderPivot(p, current_pos, dimensions, piv_count);
         i = pivot_row = piv_count++;
@@ -154,76 +157,94 @@ void ToEchelonForm(int* p, int dimensions[2])
         std::cout << "---------------------------------------\n\n";
         pivot_factor = current_item;
       }
+
       else if (i > pivot_row){
-        int abs_piv, abs_current, lcm;
-        int same_sign = (current_item>0 && pivot_factor>0) || (current_item<0 && pivot_factor<0);
+        Rational abs_piv, abs_current, mcm;
+        bool same_sign = (current_item>zero && pivot_factor>zero) || (current_item<zero && pivot_factor<zero);
 
-        abs_piv = (pivot_factor>0) ? pivot_factor : -1 * pivot_factor;
-        abs_current = (current_item>0) ? current_item : -1 * current_item;
+        abs_piv = Rational::abs(pivot_factor);
+        abs_current = Rational::abs(current_item);
 
-        lcm = LCM(abs_piv, abs_current);
+        mcm = Rational::MCM(abs_piv, abs_current);
+        if (abs_piv != abs_current)
+          RowMul(p, i, mcm/abs_current, dimensions);
 
-        RowMul(p, i, lcm/abs_current, dimensions);
         if (same_sign)
-          RowSum(p, i, pivot_row, -1 * lcm/abs_piv, dimensions);
+          RowSum(p, i, pivot_row, -1 * mcm/abs_piv, dimensions);
         else
-          RowSum(p, i, pivot_row, lcm/abs_piv, dimensions);
+          RowSum(p, i, pivot_row, mcm/abs_piv, dimensions);
       }
     }
   }
 
+  return piv_count;
+}
+
+
+void ToReducedEchelonForm(Matrix *p, int dimensions[2]){
+
+  int i, j, piv_count;
+  Rational pivot_factor, current_item;
+  Rational zero = Rational(0);
+  piv_count = ToEchelonForm(p, dimensions);
+
   int k;
   for (i=piv_count-1; i>0; i--){
-    gcd = GCD_Row(p, i, dimensions);
-    RowDiv(p, i, gcd, dimensions);
 
     j = 0;
     do{
-      current_item = *(p + i*dimensions[1] + j);
-      if (current_item == 0){
+      current_item = (*p)[i][j];
+      if (current_item == zero){
         j++;
         continue;
       }
 
-      pivot_factor = current_item;
+      RowDiv(p, i, current_item, dimensions);
+      pivot_factor = Rational(1);
       for (k=0; k<i; k++){
 
-        current_item = *(p + k*dimensions[1] + j);
-        if (current_item == 0)
+        current_item = (*p)[k][j];
+        if (current_item == zero)
           continue;
 
-        int abs_piv, abs_current, lcm;
-        int same_sign = (current_item>0 && pivot_factor>0) || (current_item<0 && pivot_factor<0);
-
-        abs_piv = (pivot_factor>0) ? pivot_factor : -1 * pivot_factor;
-        abs_current = (current_item>0) ? current_item : -1 * current_item;
-
-        lcm = LCM(abs_piv, abs_current);
-
-        RowMul(p, k, lcm/abs_current, dimensions);
-        if (same_sign)
-          RowSum(p, k, i, -1 * lcm/abs_piv, dimensions);
-        else
-          RowSum(p, k, i, lcm/abs_piv, dimensions);
+        RowSum(p, k, i, -1 * current_item, dimensions);
       }
       j++;
-    } while(j<dimensions[1] && current_item==0);
+    } while(j<dimensions[1] && current_item==zero);
 
   }
 
-  gcd = GCD_Row(p, 0, dimensions);
-  RowDiv(p, 0, gcd, dimensions);
+  RowDiv(p, 0, (*p)[0][0], dimensions);
 }
 
 
-int main()
-{
-  int matrix[4][5] = {{1,2,3,4,4},{2,3,5,1,3},{3,6,2,3,2},{2,5,8,4,1}};
-  int dimensions[2] = {4,5};
 
-  ToEchelonForm(&matrix[0][0], dimensions);
-  PrintMatrix(&matrix[0][0], dimensions);
+int main(){
+    int N,M;
+    std::cout << "Ingrese la cantidad de filas y columnas (filas columnas): " << std::endl;
+    std::cin >> N;
+    std::cin >> M;
+    int dim[] = {N,M};
 
-  //delete[] matrix;
-  return 0;
+    Matrix m(N,M);
+
+    for(int a = 0; a < N; a++){
+        for(int b = 0; b < M; b++){
+            std::cout <<"ingrese M["<<a<<']' << '['<<b<<']';
+            double tem;
+            std::cin >> tem;
+            m[a][b] = tem;
+        }
+    }
+    std::cout << *(&m) << std::endl;
+
+    for(int a = 0; a < N; a++)
+        for(int b = 0; b < M; b++)
+          std::cout << (*(&m))[a][b] << std::endl;
+
+    PrintMatrix(&m, dim);
+    std::cout << m << std::endl;
+
+    ToReducedEchelonForm(&m, dim);
+    return 0;
 }
