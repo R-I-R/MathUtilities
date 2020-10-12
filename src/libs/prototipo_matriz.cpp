@@ -103,23 +103,6 @@ void RowInter(Matrix* p, int row_to, int row_from, int dimensions[2])
   PrintMatrix(p, dimensions);
 }
 
-void OrderPivot(Matrix* p, int piv_pos[2], int dimensions[2], int piv_count)
-{
-  int row;
-  Rational zero = Rational(0);
-
-  if (piv_pos[0] == piv_count)
-    return;
-
-  for (row = piv_count; row < piv_pos[0]; row++){
-    if ( (*p)[row][piv_pos[1]] == zero ){
-      (*p).swapRows(row, piv_pos[0]);
-      PrintMatrix(p, dimensions);
-      return;
-    }
-  }
-}
-
 
 int ToEchelonForm(Matrix* p, int dimensions[2])
 {
@@ -128,36 +111,49 @@ int ToEchelonForm(Matrix* p, int dimensions[2])
   Rational pivot_value, current_item, gcd;
   Rational zero = Rational(0);
 
+  //divide cada fila por su MCD por propositos de claridad
   for(i=0; i<dimensions[0]; i++){
     gcd = GCD_Row(p, i, dimensions);
     RowDiv(p, i, gcd, dimensions);
   }
 
+  //iteracion por columnas para seleccion del pivote y formacion de ceros inferiores
   for (j = 0; j < dimensions[1]; j++){
     pivot_row = -1;
 
+    //por cada columna se revisaran las filas
     for(i = piv_count; i < dimensions[0]; i++){
       current_item = (*p)[i][j];
+
+      //si el elemento es cero se continua iterando las filas
       if (current_item == zero)
         continue;
 
-
+      //de no existir otro pivote en la columna, se selecciona el elemento actual como pivote
       if (pivot_row == -1){
+        //se deja el elemento pivote en positivo por propositos de claridad
         if(current_item < zero){
           RowMul(p, i, Rational(-1), dimensions);
           current_item *= -1;
         }
+        pivot_value = current_item;
 
-        int current_pos[2] = {i,j};
-        OrderPivot(p, current_pos, dimensions, piv_count);
-        i = pivot_row = piv_count++;
+        //si es que hay ceros sobreponiendose a la fila que deberia ocupar el pivote, se intercambian filas
+        if (i > piv_count){
+          //fila del pivote corresponde con numero de cuenta de pivotes
+          (*p).swapRows(i, piv_count);
+          PrintMatrix(p, dimensions);
+        }
+
+        //se devuelve el iterador de filas a la fila del pivote para reducir los elementos de las filas inferiores
+        i = pivot_row = piv_count++; //incapie en el posfijo, la cuenta suma despues de la igualacion
 
         std::cout << "\n[NEW PIVOT]     pos:(" << i << ',' << j << ")\n";
         PrintMatrix(p, dimensions);
         std::cout << "---------------------------------------\n\n";
-        pivot_value = current_item;
       }
 
+      //caso de ya haber encontrado un pivote en la columna, se reduciran los elementos de las filas inferiores
       else {
         Rational abs_piv, abs_current, mcm;
         bool same_sign = (current_item>zero && pivot_value>zero) || (current_item<zero && pivot_value<zero);
@@ -166,9 +162,13 @@ int ToEchelonForm(Matrix* p, int dimensions[2])
         abs_current = Rational::abs(current_item);
 
         mcm = Rational::MCM(abs_piv, abs_current);
+
+        //si es que los valores absolutos del elemento iterado y el pivote NO son iguales
+        //    se escala la fila del elemento iterado de modo que este iguale al MCM entre los dos
         if (abs_piv != abs_current)
           RowMul(p, i, mcm/abs_current, dimensions);
 
+        //se forma un cero en m[i][j]
         if (same_sign)
           RowSum(p, i, pivot_row, -1 * mcm/abs_piv, dimensions);
         else
@@ -177,6 +177,7 @@ int ToEchelonForm(Matrix* p, int dimensions[2])
     }
   }
 
+  //se retorna el numero de pivotes contados en el escalonado (con propositos de utilidad en la reduccion)
   return piv_count;
 }
 
@@ -189,11 +190,16 @@ void ToReducedEchelonForm(Matrix *p, int dimensions[2]){
   piv_count = ToEchelonForm(p, dimensions);
 
   int k;
+  //se itera por filas partiendo por la correspondiente al ultimo elemento pivote
   for (i=piv_count-1; i>0; i--){
 
     j = 0;
     pivot_value = zero;
     do{
+      //iteracion por columnas para encontrar elemento pivote dentro de la fila
+      //primer elemento no nulo de la columna corresponde al pivote
+      //mientras encuentre ceros sigue iterando
+      //habiendo encontrado un pivote se rompe la condicion pivot_value==zero del do while
       pivot_value = (*p)[i][j];
       if (pivot_value == zero){
         j++;
@@ -201,6 +207,8 @@ void ToReducedEchelonForm(Matrix *p, int dimensions[2]){
       }
 
       RowDiv(p, i, pivot_value, dimensions);
+
+      //habiendo encontrado al elemento pivote, se resta hacía arriba formando ceros en la columna pivote
       for (k=0; k<i; k++){
 
         current_item = (*p)[k][j];
@@ -236,7 +244,7 @@ int main(){
             m[a][b] = tem;
         }
     }
-    std::cout << *(&m) << std::endl;
+    std::cout << m << std::endl;
 
     for(int a = 0; a < N; a++)
         for(int b = 0; b < M; b++)
