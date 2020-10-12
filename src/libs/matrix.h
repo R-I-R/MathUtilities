@@ -2,23 +2,29 @@
 #define MATRIX_H_
 
 #include<iostream>
+#include<iomanip>
 #include "rational.h"
 
 class Matrix{
-    public:
-        Matrix(int, int);
-        ~Matrix();
+	public:
+		Matrix(int, int);
+		~Matrix();
 
-        Rational * operator [](int);
-        friend std::ostream& operator<<(std::ostream&, Matrix const&);
+		Rational * operator [](int);
+		friend std::ostream& operator<<(std::ostream&, Matrix const&);
 
-        int getRows();
-        int getColumns();
+		int getRows();
+		int getColumns();
 
-        void swapRows(int, int);
+		void swapRows(int, int);
 
-    private:
-        Rational **matrix = NULL;
-        int rows, columns;
+		Rational gcdRow(int);
+		void multiplyRow(int, Rational);
+		void sumRows(int, int, Rational = 1);
+
+
+	private:
+		Rational **matrix = NULL;
+		int rows, columns;
 };
 #endif

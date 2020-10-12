@@ -35,9 +35,35 @@
 - Matrix type working from double to Rational
 
 ## 0.4.0: October 11, 2020
-## Added
+### Added
 - Rational methods mcm and mcd
 - Changelog
 
-## Changed
+### Changed
 - Now maximumCommonDivisor and minimumCommonMultiple only return positives
+
+## 0.5.0: October 12, 2020
+### Added
+- Comments on prototipo_matriz
+
+### Changed
+- prototipo_matriz now work with Matrix class
+
+### Fixed
+- swap errors in prototipo_matriz
+
+## 1.0.0: October 12, 2020
+## Added
+- Main program to main.cpp
+- toEchelonForm and toReducedEchelonForm to main
+- Matrix methods gcdRow, multiplyRow and sumRows
+- Rational cin operator
+- .exe to gitignore
+
+## Changed
+- Now numbers with 1 as denominator are printed as integer
+- Matrix elements are printed with 10 characters of width
+- Spaces replaced by tabs
+
+### Deprecated
+- prototipo_matriz

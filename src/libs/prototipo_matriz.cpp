@@ -155,24 +155,14 @@ int ToEchelonForm(Matrix* p, int dimensions[2])
 
       //caso de ya haber encontrado un pivote en la columna, se reduciran los elementos de las filas inferiores
       else {
-        Rational abs_piv, abs_current, mcm;
-        bool same_sign = (current_item>zero && pivot_value>zero) || (current_item<zero && pivot_value<zero);
 
-        abs_piv = Rational::abs(pivot_value);
-        abs_current = Rational::abs(current_item);
-
-        mcm = Rational::MCM(abs_piv, abs_current);
-
-        //si es que los valores absolutos del elemento iterado y el pivote NO son iguales
-        //    se escala la fila del elemento iterado de modo que este iguale al MCM entre los dos
-        if (abs_piv != abs_current)
-          RowMul(p, i, mcm/abs_current, dimensions);
+        //si es que los valores del elemento iterado y el pivote NO son iguales
+        //    se escala la fila del elemento iterado de modo que este iguale al pivote pero en signo contrario
+        if (pivot_value != current_item)
+          RowMul(p, i, -pivot_value/current_item, dimensions);
 
         //se forma un cero en m[i][j]
-        if (same_sign)
-          RowSum(p, i, pivot_row, -1 * mcm/abs_piv, dimensions);
-        else
-          RowSum(p, i, pivot_row, mcm/abs_piv, dimensions);
+        RowSum(p, i, pivot_row, 1, dimensions);
       }
     }
   }
