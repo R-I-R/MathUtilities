@@ -38,3 +38,6 @@
 ## Added
 - Rational methods mcm and mcd
 - Changelog
+
+## Changed
+- Now maximumCommonDivisor and minimumCommonMultiple only return positives
