@@ -74,3 +74,7 @@
 
 ### Removed
 - prototipo matriz
+
+## 1.1.0: October 13, 2020
+### Added
+- Function to showing results

@@ -73,6 +73,36 @@ void toReducedEchelonForm(Matrix &matrix){
 	}
 }
 
+// muestra los resultados de la forma Xn = k
+void printSolutions(Matrix &matrix){
+	int rows = matrix.getRows(), columns = matrix.getColumns();
+
+	std::cout << "\nShowing solutions...\n\n";
+
+	for(int row = rows-1; row >= 0; row--){
+		bool onlyZeros = true;
+
+		for(int col = 0; col < columns-1; col++){
+			if(matrix[row][col] == Rational(0)) continue;
+			
+			if(onlyZeros)
+				std::cout << "(X" << col+1 << ") = " << matrix[row][columns-1];
+			else
+				std::cout << (matrix[row][col] < Rational(0) ? " +": " ") << -matrix[row][col] << "(X" << col+1 << ")";
+			
+			onlyZeros = false;
+		}
+
+		if(onlyZeros && matrix[row][columns-1] != Rational(0)){
+			std::cout << "The associated system has no solution\n";
+			return;
+		}
+
+		if(!onlyZeros) std::cout << '\n';
+	}
+
+}
+
 int main(){
 	int N,M;
 	printf("Enter the number of rows and columns (rows columns): ");
@@ -92,6 +122,8 @@ int main(){
 	toReducedEchelonForm(m);
 	printf("Matrix in reduced echelon form\n");
 	std::cout << m << std::endl;
+
+	printSolutions(m);
 
 	return 0;
 }
