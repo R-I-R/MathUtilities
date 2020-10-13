@@ -67,3 +67,10 @@
 
 ### Deprecated
 - prototipo_matriz
+
+## 1.0.1: October 13, 2020
+### Added
+- Functions documentation like comments
+
+### Removed
+- prototipo matriz

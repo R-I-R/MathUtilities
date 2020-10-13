@@ -1,18 +1,23 @@
 #include "rational.h"
 
+// devuelve el maximo comun divisor entre 2 numeros
 int maximumCommonDivisor(int a, int b){
 	if(b == 0) return a;
 	return abs(maximumCommonDivisor(b, a%b));
 }
+
+// devuelve el minimo comun multiplo entre 2 numeros
 int minimumCommonMultiple(int a, int b){
 	return abs((a*b)/maximumCommonDivisor(a,b));
 }
 
-
+// _________________________________Constructores__________________________________
 Rational::Rational(): numerator(0), denominator(1){}
 Rational::Rational(int numerator, int denominator): numerator((denominator < 0 ? -1:1)*numerator), denominator((denominator < 0 ? -1:1)*denominator){}
 Rational::Rational(int number): numerator(number), denominator(1){}
-Rational::Rational(double decimal){ // pasar de decimal a fraccion mediante busqueda binaria
+
+// pasar de decimal a fraccion mediante busqueda binaria
+Rational::Rational(double decimal){ 
 	double precision = 1e-9; //error relativo
 
 	int signo = decimal < 0 ? -1: 1;
@@ -46,8 +51,11 @@ Rational::Rational(double decimal){ // pasar de decimal a fraccion mediante busq
 		}
 	}
 }
+//------------------------------------------------------------
+// Destructor
 Rational::~Rational(){}
 
+// _______________________sobreescribir operadores___________________________________
 Rational::operator double() const{return double(numerator)/double(denominator);}
 
 Rational Rational::operator -() const{Rational res = *this; res.numerator *= -1; return res;}
@@ -89,7 +97,9 @@ std::istream& operator>>(std::istream& in, Rational& r){double t; in >> t; r = R
 
 int Rational::getNumerator(){return numerator;}
 int Rational::getDenominator(){return denominator;}
+//----------------------------------------------------------------------------------
 
+// compara 2 racionales entre si
 int Rational::compare(Rational const& r){
 	int r1 = numerator * r.denominator;
 	int r2 = r.numerator * denominator;
@@ -98,17 +108,24 @@ int Rational::compare(Rational const& r){
 	else return 1;
 }
 
+// Reduce la fraccion lo mas pequeño posible
 Rational Rational::reduce(Rational const& r){
 	int mcd = maximumCommonDivisor(r.numerator, r.denominator);
 	return Rational(r.numerator / mcd, r.denominator / mcd);
 }
 
+// saca la inversa de la fraccion
 Rational Rational::inverse(Rational const& r){return Rational(r.denominator, r.numerator);}
+
+// devuelve el valor absoluto de la fraccion
 Rational Rational::abs(Rational const& r){return (r < 0 ? -r: r);}
 
+// devuelve el maximo comun divisor entre 2 racionales
 Rational Rational::MCD(Rational const& a, Rational const& b){
 	return Rational(maximumCommonDivisor(a.numerator,b.numerator),maximumCommonDivisor(a.denominator,b.denominator));
 }
+
+// devuelve el minimo comun multiplo entre 2 racionales
 Rational Rational::MCM(Rational const& a, Rational const& b){
 	return Rational(minimumCommonMultiple(a.numerator,b.numerator), minimumCommonMultiple(a.denominator, b.denominator));
 }

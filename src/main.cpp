@@ -2,8 +2,10 @@
 #include "libs/matrix.h"
 #include "libs/rational.h"
 
+//devuelve el valor absoluto de un double
 double abs(double x) {return (x < 0 ? -x: x);}
 
+// pasa la matriz a su forma echelon o escalonada
 int toEchelonForm(Matrix &matrix){
 	int rows = matrix.getRows(), columns = matrix.getColumns();
 	int pivCount = 0;
@@ -46,6 +48,8 @@ int toEchelonForm(Matrix &matrix){
 	std::cout << matrix << std::endl;
 	return pivCount;
 }
+
+// pasa la matriz a su forma echelon reducida, asi se pueden visualizar las soluciones facilmente
 void toReducedEchelonForm(Matrix &matrix){
 	int columns = matrix.getColumns();
 	int pivCount = toEchelonForm(matrix);
