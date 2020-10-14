@@ -58,24 +58,30 @@ void toReducedEchelonForm(Matrix &matrix){
 		for(int col = 0; col < columns; col++){
 			if(matrix[row][col] == Rational(0)) continue;
 
-			std::cout << "Multiplying M["<< row << "] by "<< Rational::inverse(matrix[row][col]) <<"\n";
-			matrix.multiplyRow(row, Rational::inverse(matrix[row][col]));
-			std::cout << matrix << std::endl;
+			if(matrix[row][col] != Rational(1)){
+				std::cout << "Multiplying M["<< row << "] by "<< Rational::inverse(matrix[row][col]) <<"\n";
+				matrix.multiplyRow(row, Rational::inverse(matrix[row][col]));
+				std::cout << matrix << std::endl;
+			}
 
 			for(int rrow = 0; rrow < row; rrow++){
 				if(matrix[rrow][col] == Rational(0)) continue;
-				std::cout << "Adding M["<< row << "]*"<< -matrix[rrow][col] <<" to "<< "M[" << rrow << "]\n";
+				std::cout << "Adding " << -matrix[rrow][col] << "*"<< "M["<< row << "]" <<" to "<< "M[" << rrow << "]\n";
 				matrix.sumRows(row, rrow, -matrix[rrow][col]);
 				std::cout << matrix << std::endl;
 			}
 			break;
 		}
 	}
+	printf("Matrix in reduced echelon form\n");
+	std::cout << matrix << std::endl;
 }
 
 // muestra los resultados de la forma Xn = k
 void printSolutions(Matrix &matrix){
 	int rows = matrix.getRows(), columns = matrix.getColumns();
+
+	toReducedEchelonForm(matrix);
 
 	std::cout << "\nShowing solutions...\n\n";
 
@@ -119,10 +125,7 @@ int main(){
 
 	printf("\nYour matrix\n");
 	std::cout << m << std::endl;
-	toReducedEchelonForm(m);
-	printf("Matrix in reduced echelon form\n");
-	std::cout << m << std::endl;
-
+	
 	printSolutions(m);
 
 	return 0;
