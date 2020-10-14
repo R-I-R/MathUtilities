@@ -12,7 +12,7 @@ int toEchelonForm(Matrix &matrix){
 
 	for(int a = 0; a < rows; a++)
 		matrix.multiplyRow(a, Rational::inverse(matrix.gcdRow(a)));
-	
+
 	printf("simplifying matrix\n");
 	std::cout << matrix << std::endl;
 
@@ -69,7 +69,7 @@ void toReducedEchelonForm(Matrix &matrix){
 				std::cout << "Adding " << -matrix[rrow][col] << "*"<< "M["<< row << "]" <<" to "<< "M[" << rrow << "]\n";
 				matrix.sumRows(row, rrow, -matrix[rrow][col]);
 				std::cout << matrix << std::endl;
-			}	
+			}
 			break;
 		}
 	}
@@ -90,12 +90,12 @@ void printSolutions(Matrix &matrix){
 
 		for(int col = 0; col < columns-1; col++){
 			if(matrix[row][col] == Rational(0)) continue;
-			
+
 			if(onlyZeros)
 				std::cout << "(X" << col+1 << ") = " << matrix[row][columns-1];
 			else
-				std::cout << (matrix[row][col] < Rational(0) ? " +": " ") << -matrix[row][col] << "(X" << col+1 << ")";
-			
+				std::cout << (matrix[row][col] < Rational(0) ? " + ": " - ") << Rational::abs(matrix[row][col]) << "(X" << col+1 << ")";
+
 			onlyZeros = false;
 		}
 
@@ -111,11 +111,12 @@ void printSolutions(Matrix &matrix){
 
 int main(){
 	int N,M;
-	printf("Enter the number of rows and columns (rows columns): ");
-	scanf("%d %d",&N,&M);
+	printf("Enter the number of rows and columns (rows columns): \n");
+	std::cin >> N;
+	std::cin >> M;
 
 	Matrix m(N,M);
-	
+
 	for(int a = 0; a < N; a++){
 		for(int b = 0; b < M; b++){
 			printf("Enter M[%d][%d]:",a,b);
