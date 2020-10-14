@@ -106,8 +106,7 @@ void printSolutions(Matrix &matrix){
 int main(){
 	int N,M;
 	printf("Enter the number of rows and columns (rows columns): \n");
-	std::cin >> N;
-	std::cin >> M;
+	std::cin >> N >> M;
 
 	Matrix m(N,M);
 
