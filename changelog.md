@@ -78,3 +78,9 @@
 ## 1.1.0: October 13, 2020
 ### Added
 - Function to showing results
+
+## 1.1.1: October 14, 2020
+### Changed
+- scanf to cin
+- multiplications by 1 are no longer displayed
+- main just call printSolution
