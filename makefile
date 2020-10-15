@@ -1,4 +1,4 @@
-APP := calculadora
+APP := Linear_Solver
 CCFLAGS := -Wall -pedantic 
 CC := g++
 MKDIR := mkdir -p
